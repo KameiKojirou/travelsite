@@ -1,0 +1,98 @@
+<div class="flex flex-row gap-2 relative">
+    <label for="search" class="sr-only">Search:</label>
+    <input type="text" id="search" name="search" placeholder="Search for a location or category" class="input input-bordered w-full" />
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+        <path fill-rule="evenodd" d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z" clip-rule="evenodd" />
+    </svg>
+    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="reset" class="btn btn-secondary">Reset</button>
+
+    <!-- Dropdown for search results -->
+    <div id="search-results" class="absolute z-10 top-full left-0 w-full mt-1 bg-white shadow-lg rounded-lg hidden">
+        <!-- Dynamically generated location cards will appear here -->
+    </div>
+</div>
+
+<script is:inline>
+  const locations = [
+    { name: "New York", country: "USA", image: "/images/newyorkcity.webp", timezone: "America/New_York", category: "city" },
+    { name: "Los Angeles", country: "USA", image: "/images/losangeles.webp", timezone: "America/Los_Angeles", category: "city" },
+    { name: "London", country: "UK", image: "/images/london.webp", timezone: "Europe/London", category: "city" },
+    { name: "Tokyo", country: "Japan", image: "/images/tokyo.webp", timezone: "Asia/Tokyo", category: "city" },
+    { name: "Paris", country: "France", image: "/images/paris.webp", timezone: "Europe/Paris", category: "city" },
+    { name: "Malibu", country: "USA", image: "/images/malibu.webp", timezone: "America/Los_Angeles", category: "beach" },
+    { name: "Hawaii", country: "USA", image: "/images/hawaii.webp", timezone: "Pacific/Honolulu", category: "beach" },
+    { name: "Sydney", country: "Australia", image: "/images/sydney.webp", timezone: "Australia/Sydney", category: "beach" },
+    // Add more locations as needed
+  ];
+
+  // Wait for DOM to be fully loaded
+  document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('search');
+
+    // Attach the filterLocations function to the input event
+    searchInput.addEventListener('input', filterLocations);
+  });
+
+  function filterLocations(event) {
+    const query = event.target.value.toLowerCase();
+    const resultsContainer = document.getElementById('search-results');
+
+    resultsContainer.innerHTML = '';
+
+    if (!query) {
+      resultsContainer.classList.add('hidden');
+      return;
+    }
+
+    // Filter locations based on the input query (matching either name or category)
+    const filteredLocations = locations.filter(location =>
+      location.name.toLowerCase().includes(query) ||
+      location.category.toLowerCase().includes(query)
+    );
+
+    // If there are matching results, display them
+    if (filteredLocations.length > 0) {
+      filteredLocations.forEach(location => {
+        const locationCard = document.createElement('div');
+        locationCard.classList.add('shadow-md', 'p-4', 'my-2', 'cursor-pointer', 'hover:bg-gray-100');
+        const locationImage = document.createElement('img');
+        locationImage.src = location.image;
+        locationImage.alt = `${location.name} image`;
+        locationImage.classList.add('w-full', 'h-32', 'object-cover', 'rounded-md', 'mb-2');
+        // Create location info
+        const locationInfo = document.createElement('div');
+        locationInfo.innerHTML = `
+          <div class="flex flex-col gap-2">
+          <h3 class="text-lg font-bold">${location.name}, ${location.country}</h3>
+          <p>Local Time: ${getLocalTime(location.timezone)}</p>
+          <p>Timezone: ${location.timezone}</p>
+          <a href="#" class="btn btn-primary">View Details</a>
+          </div>
+        `;
+
+        // Append elements
+        locationCard.appendChild(locationImage);
+        locationCard.appendChild(locationInfo);
+        locationCard.onclick = () => selectLocation(location.name); // Optional: Select location functionality
+        resultsContainer.appendChild(locationCard);
+      });
+
+      resultsContainer.classList.remove('hidden');
+    } else {
+      resultsContainer.classList.add('hidden');
+    }
+  }
+
+  function selectLocation(location) {
+    const searchInput = document.getElementById('search');
+    searchInput.value = location;
+    document.getElementById('search-results').classList.add('hidden'); // Hide the results after selection
+  }
+
+
+  function getLocalTime(timezone) {
+    const now = new Date();
+    return now.toLocaleString("en-US", { timeZone: timezone, hour: 'numeric', minute: 'numeric', hour12: true });
+  }
+</script>

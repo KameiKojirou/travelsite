@@ -1,0 +1,107 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+import Title from "../components/Title.astro";
+---
+
+<MainLayout>
+    <html>
+  <head>
+    <title>Email Form</title>
+    <style>
+      .form-message {
+        margin-top: 10px;
+        color: green;
+        font-size: 14px;
+      }
+      .error-message {
+        color: red;
+      }
+      label {
+        display: block;
+        margin-top: 10px;
+      }
+      textarea {
+        width: 100%;
+        height: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <form id="contactForm">
+      <!-- Email Input -->
+      <label for="email">Email:</label>
+      <input type="text" id="email" name="email" class="bg-gray-200 w-full" />
+      <span id="emailError" class="error-message"></span>
+
+      <!-- Subject Input -->
+      <label for="subject">Subject:</label>
+      <input type="text" id="subject" name="subject" class="bg-gray-200 w-full" />
+      <span id="subjectError" class="error-message"></span>
+
+      <!-- Message Text Area -->
+      <label for="message">Message:</label>
+      <textarea id="message" name="message" class="bg-gray-200 w-full"></textarea>
+      <span id="messageError" class="error-message"></span>
+
+      <br /><br />
+      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="reset" class="btn btn-secondary">Reset</button>
+    </form>
+
+    <div id="formMessage" class="form-message"></div>
+
+    <script>
+      // Function to validate email using a regular expression
+      function validateEmail(email) {
+        const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+        return re.test(String(email).toLowerCase());
+      }
+
+      // Function to validate the form on submit
+      function validateForm(event) {
+        event.preventDefault(); // Prevent form from submitting
+
+        // Clear previous messages
+        const emailError = document.getElementById('emailError');
+        const subjectError = document.getElementById('subjectError');
+        const messageError = document.getElementById('messageError');
+        const formMessage = document.getElementById('formMessage');
+
+        emailError.textContent = '';
+        subjectError.textContent = '';
+        messageError.textContent = '';
+        formMessage.textContent = '';
+
+        // Get form values with type casting
+        const emailInput = (document.getElementById('email') as HTMLInputElement).value;
+        const subjectInput = (document.getElementById('subject') as HTMLInputElement).value;
+        const messageInput = (document.getElementById('message') as HTMLTextAreaElement).value;
+
+        // Form validation logic
+        let valid = true;
+
+        if (!validateEmail(emailInput)) {
+          emailError.textContent = 'Please enter a valid email address';
+          valid = false;
+        }
+        if (subjectInput.trim() === '') {
+          subjectError.textContent = 'Please enter a subject';
+          valid = false;
+        }
+        if (messageInput.trim() === '') {
+          messageError.textContent = 'Please enter a message';
+          valid = false;
+        }
+
+        // If all fields are valid, display success message
+        if (valid) {
+          formMessage.textContent = "We'll get in touch!";
+        }
+      }
+
+      // Attach form submit handler
+      document.getElementById('contactForm').addEventListener('submit', validateForm);
+    </script>
+  </body>
+</html>
+</MainLayout>
