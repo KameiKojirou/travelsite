@@ -10,10 +10,12 @@ import NavBar from "../components/NavBar.astro";
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
-<body>
+<body class="min-h-screen bg-no-repeat bg-[url('/images/background.webp')] bg-cover">
     <NavBar />
-    <main class="p-4">
-        <slot />
-    </main>
+    <div class="flex flex-row gap-2 justify-center my-4">
+        <main class="p-4 max-w-7xl bg-white w-full h-auto rounded-lg">
+            <slot />
+        </main>
+    </div>
 </body>
 </html>

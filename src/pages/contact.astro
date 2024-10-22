@@ -4,51 +4,29 @@ import Title from "../components/Title.astro";
 ---
 
 <MainLayout>
-    <html>
-  <head>
-    <title>Email Form</title>
-    <style>
-      .form-message {
-        margin-top: 10px;
-        color: green;
-        font-size: 14px;
-      }
-      .error-message {
-        color: red;
-      }
-      label {
-        display: block;
-        margin-top: 10px;
-      }
-      textarea {
-        width: 100%;
-        height: 100px;
-      }
-    </style>
-  </head>
-  <body>
-    <form id="contactForm">
+    <Title>Contact</Title>
+    <form id="contactForm" class="flex flex-col gap-2">
       <!-- Email Input -->
       <label for="email">Email:</label>
-      <input type="text" id="email" name="email" class="bg-gray-200 w-full" />
-      <span id="emailError" class="error-message"></span>
+      <input type="text" id="email" name="email" class="bg-gray-300 w-full p-2" />
+      <span id="emailError" class="text-error"></span>
 
       <!-- Subject Input -->
       <label for="subject">Subject:</label>
-      <input type="text" id="subject" name="subject" class="bg-gray-200 w-full" />
-      <span id="subjectError" class="error-message"></span>
+      <input type="text" id="subject" name="subject" class="bg-gray-300 w-full p-2" />
+      <span id="subjectError" class="text-error"></span>
 
       <!-- Message Text Area -->
       <label for="message">Message:</label>
-      <textarea id="message" name="message" class="bg-gray-200 w-full"></textarea>
-      <span id="messageError" class="error-message"></span>
+      <textarea id="message" name="message" class="bg-gray-300 w-full p-2"></textarea>
+      <span id="messageError" class="text-error"></span>
 
       <br /><br />
       <button type="submit" class="btn btn-primary">Submit</button>
       <button type="reset" class="btn btn-secondary">Reset</button>
     </form>
 
-    <div id="formMessage" class="form-message"></div>
+    <div id="formMessage" class="text-success"></div>
 
     <script>
       // Function to validate email using a regular expression
@@ -102,6 +80,5 @@ import Title from "../components/Title.astro";
       // Attach form submit handler
       document.getElementById('contactForm').addEventListener('submit', validateForm);
     </script>
-  </body>
-</html>
+
 </MainLayout>
