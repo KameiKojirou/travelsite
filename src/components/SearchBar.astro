@@ -24,6 +24,9 @@
     { name: "Malibu", country: "USA", image: "/images/malibu.webp", timezone: "America/Los_Angeles", category: "beach" },
     { name: "Hawaii", country: "USA", image: "/images/hawaii.webp", timezone: "Pacific/Honolulu", category: "beach" },
     { name: "Sydney", country: "Australia", image: "/images/sydney.webp", timezone: "Australia/Sydney", category: "beach" },
+    { name: "Angkor Wat", country: "Cambodia", image: "/images/angkorwat.webp", timezone: "Asia/Phnom_Penh", category: "temple" },
+    { name: "Borobudur", country: "Indonesia", image: "/images/borobudur.webp", timezone: "Asia/Jakarta", category: "temple" },
+
     // Add more locations as needed
   ];
 
@@ -49,7 +52,8 @@
     // Filter locations based on the input query (matching either name or category)
     const filteredLocations = locations.filter(location =>
       location.name.toLowerCase().includes(query) ||
-      location.category.toLowerCase().includes(query)
+      location.category.toLowerCase().includes(query) ||
+      location.country.toLowerCase().includes(query)
     );
 
     // If there are matching results, display them
