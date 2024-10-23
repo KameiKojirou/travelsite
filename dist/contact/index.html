@@ -1,0 +1,90 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Document</title><link rel="stylesheet" href="/travelsite/_astro/about.BBIydV7M.css"><script type="module">function c(t){return/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(String(t).toLowerCase())}function u(t){t.preventDefault();const n=document.getElementById("emailError"),o=document.getElementById("subjectError"),a=document.getElementById("messageError"),s=document.getElementById("formMessage");n.textContent="",o.textContent="",a.textContent="",s.textContent="";const r=document.getElementById("email").value,m=document.getElementById("subject").value,l=document.getElementById("message").value;let e=!0;c(r)||(n.textContent="Please enter a valid email address",e=!1),m.trim()===""&&(o.textContent="Please enter a subject",e=!1),l.trim()===""&&(a.textContent="Please enter a message",e=!1),e&&(s.textContent="We'll get in touch!")}document.getElementById("contactForm").addEventListener("submit",u);
+</script></head> <body class="min-h-screen bg-no-repeat bg-[url('/images/background.webp')] bg-cover"> <div class="flex flex-row gap-2 justify-center p-4 bg-gray-800"> <nav class="flex flex-row gap-2 justify-between w-full max-w-7xl"> <div class="flex flex-row gap-2"> <a class="btn btn-ghost dark:text-white" href="/travelsite/"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6"> <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z"></path> </svg> <div>
+Home
+</div> </a> <a class="btn btn-ghost dark:text-white" href="/travelsite/about">About</a> <a class="btn btn-ghost dark:text-white" href="/travelsite/contact">Contact</a> </div> <div class="flex flex-row gap-2 relative"> <div class="pt-2"> <div class="text-white"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8"> <path fill-rule="evenodd" d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z" clip-rule="evenodd"></path> </svg> </div> </div> <label for="search" class="sr-only">Search:</label> <input type="text" id="search" name="search" placeholder="Search for a location or category" class="input input-bordered w-full"> <!-- Dropdown for search results --> <div id="search-results" class="absolute z-10 top-full left-0 w-full mt-1  shadow-lg rounded-lg hidden"> <!-- Dynamically generated location cards will appear here --> </div> </div> <script>
+  const locations = [
+    { name: "New York", country: "USA", image: "/travelsite/images/newyorkcity.webp", timezone: "America/New_York", category: "city" },
+    { name: "Los Angeles", country: "USA", image: "/travelsite/images/losangeles.webp", timezone: "America/Los_Angeles", category: "city" },
+    { name: "London", country: "UK", image: "/travelsite/images/london.webp", timezone: "Europe/London", category: "city" },
+    { name: "Tokyo", country: "Japan", image: "/travelsite/images/tokyo.webp", timezone: "Asia/Tokyo", category: "city" },
+    { name: "Paris", country: "France", image: "/travelsite/images/paris.webp", timezone: "Europe/Paris", category: "city" },
+    { name: "Malibu", country: "USA", image: "/travelsite/images/malibu.webp", timezone: "America/Los_Angeles", category: "beach" },
+    { name: "Hawaii", country: "USA", image: "/travelsite/images/hawaii.webp", timezone: "Pacific/Honolulu", category: "beach" },
+    { name: "Sydney", country: "Australia", image: "/travelsite/images/sydney.webp", timezone: "Australia/Sydney", category: "beach" },
+    { name: "Angkor Wat", country: "Cambodia", image: "/travelsite/images/angkorwat.webp", timezone: "Asia/Phnom_Penh", category: "temple" },
+    { name: "Borobudur", country: "Indonesia", image: "/travelsite/images/borobudur.webp", timezone: "Asia/Jakarta", category: "temple" },
+
+    // Add more locations as needed
+  ];
+
+  // Wait for DOM to be fully loaded
+  document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('search');
+
+    // Attach the filterLocations function to the input event
+    searchInput.addEventListener('input', filterLocations);
+  });
+
+  function filterLocations(event) {
+    const query = event.target.value.toLowerCase();
+    const resultsContainer = document.getElementById('search-results');
+
+    resultsContainer.innerHTML = '';
+
+    if (!query) {
+      resultsContainer.classList.add('hidden');
+      return;
+    }
+
+    // Filter locations based on the input query (matching either name or category)
+    const filteredLocations = locations.filter(location =>
+      location.name.toLowerCase().includes(query) ||
+      location.category.toLowerCase().includes(query) ||
+      location.country.toLowerCase().includes(query)
+    );
+
+    // If there are matching results, display them
+    if (filteredLocations.length > 0) {
+      filteredLocations.forEach(location => {
+        const locationCard = document.createElement('div');
+        locationCard.classList.add('bg-white', 'shadow-md', 'p-4', 'my-2', 'cursor-pointer', 'hover:bg-gray-200');
+        const locationImage = document.createElement('img');
+        locationImage.src = location.image;
+        locationImage.alt = `${location.name} image`;
+        locationImage.classList.add('w-full', 'h-32', 'object-cover', 'rounded-md', 'mb-2');
+        // Create location info
+        const locationInfo = document.createElement('div');
+        locationInfo.innerHTML = `
+          <div class="flex flex-col gap-2">
+          <h3 class="text-lg font-bold">${location.name}, ${location.country}</h3>
+          <p>Local Time: ${getLocalTime(location.timezone)}</p>
+          <p>Timezone: ${location.timezone}</p>
+          <a href="#" class="btn btn-primary">View Details</a>
+          </div>
+        `;
+
+        // Append elements
+        locationCard.appendChild(locationImage);
+        locationCard.appendChild(locationInfo);
+        locationCard.onclick = () => selectLocation(location.name); // Optional: Select location functionality
+        resultsContainer.appendChild(locationCard);
+      });
+
+      resultsContainer.classList.remove('hidden');
+    } else {
+      resultsContainer.classList.add('hidden');
+    }
+  }
+
+  function selectLocation(location) {
+    const searchInput = document.getElementById('search');
+    searchInput.value = location;
+    document.getElementById('search-results').classList.add('hidden'); // Hide the results after selection
+  }
+
+
+  function getLocalTime(timezone) {
+    const now = new Date();
+    return now.toLocaleString("en-US", { timeZone: timezone, hour: 'numeric', minute: 'numeric', hour12: true });
+  }
+</script> </nav> </div> <div class="flex flex-row gap-2 justify-center my-4"> <main class="p-4 max-w-7xl bg-white w-full h-auto rounded-lg">  <h1 class="text-5xl font-bold my-4">Contact</h1> <form id="contactForm" class="flex flex-col gap-2"> <!-- Email Input --> <label for="email">Email:</label> <input type="text" id="email" name="email" class="bg-gray-300 w-full p-2"> <span id="emailError" class="text-error"></span> <!-- Subject Input --> <label for="subject">Subject:</label> <input type="text" id="subject" name="subject" class="bg-gray-300 w-full p-2"> <span id="subjectError" class="text-error"></span> <!-- Message Text Area --> <label for="message">Message:</label> <textarea id="message" name="message" class="bg-gray-300 w-full p-2"></textarea> <span id="messageError" class="text-error"></span> <br><br> <button type="submit" class="btn btn-primary">Submit</button> <button type="reset" class="btn btn-secondary">Reset</button> </form> <div id="formMessage" class="text-success"></div>   </main> </div> </body></html>

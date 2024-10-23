@@ -1,0 +1,89 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Document</title><link rel="stylesheet" href="/travelsite/_astro/about.BBIydV7M.css"></head> <body class="min-h-screen bg-no-repeat bg-[url('/images/background.webp')] bg-cover"> <div class="flex flex-row gap-2 justify-center p-4 bg-gray-800"> <nav class="flex flex-row gap-2 justify-between w-full max-w-7xl"> <div class="flex flex-row gap-2"> <a class="btn btn-ghost dark:text-white" href="/travelsite/"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6"> <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z"></path> </svg> <div>
+Home
+</div> </a> <a class="btn btn-ghost dark:text-white" href="/travelsite/about">About</a> <a class="btn btn-ghost dark:text-white" href="/travelsite/contact">Contact</a> </div> <div class="flex flex-row gap-2 relative"> <div class="pt-2"> <div class="text-white"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8"> <path fill-rule="evenodd" d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z" clip-rule="evenodd"></path> </svg> </div> </div> <label for="search" class="sr-only">Search:</label> <input type="text" id="search" name="search" placeholder="Search for a location or category" class="input input-bordered w-full"> <!-- Dropdown for search results --> <div id="search-results" class="absolute z-10 top-full left-0 w-full mt-1  shadow-lg rounded-lg hidden"> <!-- Dynamically generated location cards will appear here --> </div> </div> <script>
+  const locations = [
+    { name: "New York", country: "USA", image: "/travelsite/images/newyorkcity.webp", timezone: "America/New_York", category: "city" },
+    { name: "Los Angeles", country: "USA", image: "/travelsite/images/losangeles.webp", timezone: "America/Los_Angeles", category: "city" },
+    { name: "London", country: "UK", image: "/travelsite/images/london.webp", timezone: "Europe/London", category: "city" },
+    { name: "Tokyo", country: "Japan", image: "/travelsite/images/tokyo.webp", timezone: "Asia/Tokyo", category: "city" },
+    { name: "Paris", country: "France", image: "/travelsite/images/paris.webp", timezone: "Europe/Paris", category: "city" },
+    { name: "Malibu", country: "USA", image: "/travelsite/images/malibu.webp", timezone: "America/Los_Angeles", category: "beach" },
+    { name: "Hawaii", country: "USA", image: "/travelsite/images/hawaii.webp", timezone: "Pacific/Honolulu", category: "beach" },
+    { name: "Sydney", country: "Australia", image: "/travelsite/images/sydney.webp", timezone: "Australia/Sydney", category: "beach" },
+    { name: "Angkor Wat", country: "Cambodia", image: "/travelsite/images/angkorwat.webp", timezone: "Asia/Phnom_Penh", category: "temple" },
+    { name: "Borobudur", country: "Indonesia", image: "/travelsite/images/borobudur.webp", timezone: "Asia/Jakarta", category: "temple" },
+
+    // Add more locations as needed
+  ];
+
+  // Wait for DOM to be fully loaded
+  document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('search');
+
+    // Attach the filterLocations function to the input event
+    searchInput.addEventListener('input', filterLocations);
+  });
+
+  function filterLocations(event) {
+    const query = event.target.value.toLowerCase();
+    const resultsContainer = document.getElementById('search-results');
+
+    resultsContainer.innerHTML = '';
+
+    if (!query) {
+      resultsContainer.classList.add('hidden');
+      return;
+    }
+
+    // Filter locations based on the input query (matching either name or category)
+    const filteredLocations = locations.filter(location =>
+      location.name.toLowerCase().includes(query) ||
+      location.category.toLowerCase().includes(query) ||
+      location.country.toLowerCase().includes(query)
+    );
+
+    // If there are matching results, display them
+    if (filteredLocations.length > 0) {
+      filteredLocations.forEach(location => {
+        const locationCard = document.createElement('div');
+        locationCard.classList.add('bg-white', 'shadow-md', 'p-4', 'my-2', 'cursor-pointer', 'hover:bg-gray-200');
+        const locationImage = document.createElement('img');
+        locationImage.src = location.image;
+        locationImage.alt = `${location.name} image`;
+        locationImage.classList.add('w-full', 'h-32', 'object-cover', 'rounded-md', 'mb-2');
+        // Create location info
+        const locationInfo = document.createElement('div');
+        locationInfo.innerHTML = `
+          <div class="flex flex-col gap-2">
+          <h3 class="text-lg font-bold">${location.name}, ${location.country}</h3>
+          <p>Local Time: ${getLocalTime(location.timezone)}</p>
+          <p>Timezone: ${location.timezone}</p>
+          <a href="#" class="btn btn-primary">View Details</a>
+          </div>
+        `;
+
+        // Append elements
+        locationCard.appendChild(locationImage);
+        locationCard.appendChild(locationInfo);
+        locationCard.onclick = () => selectLocation(location.name); // Optional: Select location functionality
+        resultsContainer.appendChild(locationCard);
+      });
+
+      resultsContainer.classList.remove('hidden');
+    } else {
+      resultsContainer.classList.add('hidden');
+    }
+  }
+
+  function selectLocation(location) {
+    const searchInput = document.getElementById('search');
+    searchInput.value = location;
+    document.getElementById('search-results').classList.add('hidden'); // Hide the results after selection
+  }
+
+
+  function getLocalTime(timezone) {
+    const now = new Date();
+    return now.toLocaleString("en-US", { timeZone: timezone, hour: 'numeric', minute: 'numeric', hour12: true });
+  }
+</script> </nav> </div> <div class="flex flex-row gap-2 justify-center my-4"> <main class="p-4 max-w-7xl bg-white w-full h-auto rounded-lg">  <h1 class="text-5xl font-bold my-4">About Us</h1> <p>Welcome to <strong>Uncharted Destinations - We'll find it eventually!</strong>, where our motto is: <em>“It’s not lost, it’s just... temporarily misplaced!”</em> Founded in 1982 by a group of explorers who still haven’t made it back, we’ve spent decades perfecting the art of getting people gloriously, adventurously lost. Our commitment to the bizarre and the unknown has earned us a reputation as the world’s most unreliable, yet oddly thrilling, travel agency.</p> <h2>Our Story</h2> <p>It all began when our founder, Sir Reginald “Oops” McWander, accidentally led an expedition to the bottom of a swimming pool instead of the Amazon. Inspired by that mishap, he decided to start a travel company with the goal of sending others on equally bewildering adventures. Since then, we’ve branched out into niche markets like <strong>Supervillain Resorts</strong>, <strong>Alien Abduction Tours</strong>, and <strong>Subterranean Getaways</strong>. Whether you're seeking Dr. Doom’s volcano lair for a weekend retreat or hoping to “accidentally” board a UFO (hey, they’re usually hovering around our airports), we’ve got you covered.</p> <h2>Our "Top" Destinations</h2> <ul> <li><strong>The Island of Dr. Weird</strong>: Relax on the shores of this tropical paradise! (Disclaimer: Beware of the occasional mutated wildlife—lava sharks are no joke).</li> <li><strong>Atlantis, Maybe</strong>: We’ve been trying to find this legendary underwater city for decades. <em>We're 87% sure it's out there</em>. Our customers enjoy weeks of staring at open ocean, all expenses <em>not</em> included.</li> <li><strong>Moon Cheese Village</strong>: This picturesque lunar village is entirely made of cheese. Or maybe it’s not. We can’t confirm, but hey, doesn’t hurt to try!</li> </ul> <h2>What Sets Us Apart</h2> <p>Unlike <em>other</em> travel agencies, we don’t bother with trivial things like “accuracy” or “reliability.” Instead, we offer exclusive experiences like:</p> <ul> <li><strong>Lost and Found Getaways</strong>: Not sure where you are? Perfect! We’ll just roll with it.</li> <li><strong>Supervillain Headquarters Stays</strong>: Ever dreamed of living like a diabolical genius? Enjoy our five-star service in bunkers located deep beneath inactive volcanoes! (Guaranteed no hero interruptions, unless you count that guy who keeps asking for directions).</li> <li><strong>Invisible Cities Tour</strong>: A fan favorite! You can’t see them, but trust us, they’re there.</li> </ul> <h2>Our Travel Guides</h2> <p>Our expert team of “guides” consists of adventurers, explorers, and that guy Dave who once hitchhiked across the continent by accident. Each guide is specially trained in skills like <strong>map misreading</strong>, <strong>GPS sabotage</strong>, and <strong>compass spinning</strong>. They’ll take you on trips that range from <em>mildly confusing</em> to <em>completely bewildering</em>.</p> <p>At Uncharted Destinations, we don’t just help you travel—we help you question everything you thought you knew about geography, reality, and common sense. So, pack your bags (and some extra snacks), because with us, you never know where you'll end up... but you’ll definitely have a story to tell!</p> <img src="/travelsite/images/home.webp" alt="Map of Uncharted Destinations - We'll find it eventually!">  </main> </div> </body></html>
